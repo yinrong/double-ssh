@@ -1,0 +1,20 @@
+# contool ssh config fragment.
+# Installer substitutes the __PLACEHOLDERS__ below and appends this to ~/.ssh/config.
+
+Host B
+  HostName __HOST_B__
+  User __USER_B__
+  IdentityFile __IDENTITY__
+  AddKeysToAgent yes
+  ForwardAgent yes
+
+Host C
+  HostName __HOST_C__
+  User __USER_C__
+  IdentityFile __IDENTITY__
+  ProxyJump __USER_B__@B
+  AddKeysToAgent yes
+  ForwardAgent yes
+  ControlMaster auto
+  ControlPath ~/.ssh/cm-%r@%h:%p
+  ControlPersist 10m
