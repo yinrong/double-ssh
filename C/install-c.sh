@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# contool C-side installer (Ubuntu/Debian).
+# double-ssh C-side installer (Ubuntu/Debian).
 # Installs openssh-server, Node.js 20 (NodeSource — 24.04's default 18.x is too
 # old for Claude Code), Claude Code CLI, creates ~/claude-clips/ for clip2c uploads,
 # and appends A's pubkey to authorized_keys.

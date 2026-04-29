@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# contool B-side setup (jump host).
+# double-ssh B-side setup (jump host).
 # Ensures sshd allows TCP forwarding so ProxyJump works, and appends A's pubkey
 # to this user's authorized_keys. Needs sudo to touch /etc/ssh/sshd_config.
 set -euo pipefail

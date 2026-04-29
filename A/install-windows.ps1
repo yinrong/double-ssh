@@ -1,4 +1,4 @@
-# contool A-side installer for Windows 11.
+# double-ssh A-side installer for Windows 11.
 # Installs VSCode + Remote-SSH + Claude Code extension, WezTerm, OpenSSH client,
 # generates an ed25519 key, writes %USERPROFILE%\.ssh\config, drops wezterm.lua
 # and clip2c.ps1 into place. Prints the pubkey at the end.
@@ -14,7 +14,7 @@ $ErrorActionPreference = 'Stop'
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repoRoot  = Split-Path -Parent $scriptDir
 $sshDir    = Join-Path $env:USERPROFILE '.ssh'
-$keyPath   = Join-Path $sshDir 'id_ed25519_contool'
+$keyPath   = Join-Path $sshDir 'id_ed25519_double-ssh'
 
 function Ensure-Winget {
   if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
@@ -41,7 +41,7 @@ function Ensure-OpenSSH {
 function Generate-Key {
   if (-not (Test-Path $sshDir)) { New-Item -ItemType Directory -Path $sshDir | Out-Null }
   if (-not (Test-Path $keyPath)) {
-    & ssh-keygen -t ed25519 -f $keyPath -N '""' -C "contool@$env:COMPUTERNAME"
+    & ssh-keygen -t ed25519 -f $keyPath -N '""' -C "double-ssh@$env:COMPUTERNAME"
   } else {
     Write-Host "Reusing existing key: $keyPath"
   }
@@ -65,10 +65,10 @@ function Write-SshConfig {
   $configPath = Join-Path $sshDir 'config'
   if (-not (Test-Path $configPath)) { New-Item -ItemType File -Path $configPath | Out-Null }
 
-  # Idempotent: strip any prior contool block.
+  # Idempotent: strip any prior double-ssh block.
   $raw = Get-Content $configPath -Raw -ErrorAction SilentlyContinue
   if ($null -eq $raw) { $raw = '' }
-  $raw = [regex]::Replace($raw, '(?ms)# BEGIN contool.*?# END contool\r?\n?', '')
+  $raw = [regex]::Replace($raw, '(?ms)# BEGIN double-ssh.*?# END double-ssh\r?\n?', '')
 
   $template = Get-Content (Join-Path $repoRoot 'ssh\config.template') -Raw
   # Windows OpenSSH accepts forward-slash paths; rewrite for clarity.
@@ -80,7 +80,7 @@ function Write-SshConfig {
     -replace '__HOST_C__', $hostC `
     -replace '__IDENTITY__', $identity
 
-  $block = "# BEGIN contool`r`n$rendered# END contool`r`n"
+  $block = "# BEGIN double-ssh`r`n$rendered# END double-ssh`r`n"
   Set-Content -Path $configPath -Value ($raw + $block) -Encoding ASCII -NoNewline
 }
 

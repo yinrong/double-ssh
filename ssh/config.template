@@ -1,4 +1,4 @@
-# contool ssh config fragment.
+# double-ssh ssh config fragment.
 # Installer substitutes the __PLACEHOLDERS__ below and appends this to ~/.ssh/config.
 
 Host B

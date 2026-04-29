@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# contool A-side installer for Ubuntu 24.04.
+# double-ssh A-side installer for Ubuntu 24.04.
 # Installs VSCode + Remote-SSH + Claude Code extension, WezTerm (fury.io),
 # wl-clipboard + xclip, generates an ed25519 key, writes ~/.ssh/config,
 # drops wezterm.lua and clip2c into place. Prints the pubkey at the end
@@ -7,7 +7,7 @@
 set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-KEY="$HOME/.ssh/id_ed25519_contool"
+KEY="$HOME/.ssh/id_ed25519_double-ssh"
 
 require_sudo() {
   if ! sudo -n true 2>/dev/null; then
@@ -70,7 +70,7 @@ generate_key() {
   mkdir -p "$HOME/.ssh"
   chmod 700 "$HOME/.ssh"
   if [ ! -f "$KEY" ]; then
-    ssh-keygen -t ed25519 -f "$KEY" -N "" -C "contool@$(hostname)"
+    ssh-keygen -t ed25519 -f "$KEY" -N "" -C "double-ssh@$(hostname)"
   else
     echo "Reusing existing key: $KEY"
   fi
@@ -88,13 +88,13 @@ write_ssh_config() {
   local config="$HOME/.ssh/config"
   touch "$config"; chmod 600 "$config"
 
-  # Remove any previous contool block so re-runs are idempotent.
-  if grep -q '# BEGIN contool' "$config"; then
-    sed -i '/# BEGIN contool/,/# END contool/d' "$config"
+  # Remove any previous double-ssh block so re-runs are idempotent.
+  if grep -q '# BEGIN double-ssh' "$config"; then
+    sed -i '/# BEGIN double-ssh/,/# END double-ssh/d' "$config"
   fi
 
   {
-    echo "# BEGIN contool"
+    echo "# BEGIN double-ssh"
     sed \
       -e "s|__USER_B__|$user_b|g" \
       -e "s|__HOST_B__|$host_b|g" \
@@ -102,7 +102,7 @@ write_ssh_config() {
       -e "s|__HOST_C__|$host_c|g" \
       -e "s|__IDENTITY__|$KEY|g" \
       "$HERE/ssh/config.template"
-    echo "# END contool"
+    echo "# END double-ssh"
   } >>"$config"
 }
 

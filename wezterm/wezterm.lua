@@ -1,4 +1,4 @@
--- contool WezTerm config.
+-- double-ssh WezTerm config.
 -- Ctrl+Shift+V: if clipboard holds an image, clip2c saves it to C:~/claude-clips/
 -- and we inject the remote path into the PTY so Claude Code can read it.
 -- If no image on clipboard, falls back to normal text paste.
@@ -11,8 +11,8 @@ local home = wezterm.home_dir
 local is_win = wezterm.target_triple:find('windows') ~= nil
 
 -- The ssh alias (defined in ~/.ssh/config) that clip2c uploads to.
--- Override by setting env CONTOOL_TARGET before launching WezTerm.
-local target = os.getenv('CONTOOL_TARGET') or 'C'
+-- Override by setting env DOUBLE_SSH_TARGET before launching WezTerm.
+local target = os.getenv('DOUBLE_SSH_TARGET') or 'C'
 
 local function paste_image(window, pane)
   local cmd
