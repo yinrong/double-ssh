@@ -31,35 +31,54 @@ clip2c/clip2c.ps1         Windows 侧同上
 
 ## 安装顺序（先 C，再 B，最后 A）
 
-### 1. C 机器
+### 1. 在 C 上执行（用密码或已有 key 登录进去）
+
 ```bash
-scp C/install-c.sh userC@hostC:/tmp/
-ssh userC@hostC
-bash /tmp/install-c.sh
-claude /login               # 或 export ANTHROPIC_API_KEY=...
+curl -fsSL https://raw.githubusercontent.com/yinrong/double-ssh/main/C/install-c.sh | bash
 ```
 
-### 2. B 机器
+脚本结束后会提示你粘贴 A 的公钥——**先跳过**，等 A 装完再回来填。
+
 ```bash
-scp B/setup-sshd.sh userB@hostB:/tmp/
-ssh userB@hostB
-sudo bash /tmp/setup-sshd.sh
+claude /login    # 或在 ~/.bashrc 里加 export ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-### 3. A 机器
+### 2. 在 B 上执行（用密码或已有 key 登录进去）
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/yinrong/double-ssh/main/B/setup-sshd.sh | sudo bash
+```
+
+同样跳过粘贴公钥的步骤，等 A 装完再填。
+
+### 3. 在 A 上执行
+
+先克隆这个仓库：
+```bash
+git clone https://github.com/yinrong/double-ssh.git
+cd double-ssh
+```
+
 **Ubuntu 24.04**：
 ```bash
-cd A && bash install-ubuntu.sh
+bash A/install-ubuntu.sh
 ```
 
 **Windows 11**（管理员 PowerShell）：
 ```powershell
-cd A
 Set-ExecutionPolicy -Scope Process Bypass -Force
-.\install-windows.ps1
+.\A\install-windows.ps1
 ```
 
-每个脚本末尾会打印出 A 的 SSH 公钥，把它粘贴到 B 和 C 的 `authorized_keys`（脚本会交互提示你）。
+脚本结束时会打印 A 的 SSH 公钥。**把这行公钥分别粘贴到 B 和 C 上**：
+
+```bash
+# 在 B 上执行：
+echo "粘贴公钥到这里" >> ~/.ssh/authorized_keys
+
+# 在 C 上执行：
+echo "粘贴公钥到这里" >> ~/.ssh/authorized_keys
+```
 
 ## 验证
 
