@@ -39,8 +39,21 @@ curl -fsSL https://raw.githubusercontent.com/yinrong/double-ssh/main/C/install-c
 
 脚本结束后会提示你粘贴 A 的公钥——**先跳过**，等 A 装完再回来填。
 
+然后配置 Claude Code 的 API 密钥（二选一）：
+
+**方式一：浏览器登录（推荐）**
 ```bash
-claude /login    # 或在 ~/.bashrc 里加 export ANTHROPIC_API_KEY=sk-ant-...
+claude /login
+```
+按提示在浏览器里登录 Anthropic 账号即可，token 自动保存。
+
+**方式二：手动填入 API Key**
+
+到 https://console.anthropic.com/settings/keys 创建一个 key，然后：
+```bash
+# 写入 ~/.bashrc 让每次登录自动生效
+echo 'export ANTHROPIC_API_KEY=sk-ant-你的密钥' >> ~/.bashrc
+source ~/.bashrc
 ```
 
 ### 2. 在 B 上执行（用密码或已有 key 登录进去）
